@@ -1,0 +1,30 @@
+' UML sequence diagram for creating and sending a transaction
+
+@startuml
+title Creating a Cryptcoin Transaction
+hide footbox
+
+participant "Wallet Node" as Client << Client >>
+participant "Block Chain" as BlockChain << Data Structure >>
+participant "Miner Node" as Miner << Remote >>
+
+Client -> BlockChain : Get main chain
+activate Client
+activate BlockChain
+Client <-- BlockChain : Main chain
+
+Client -> Client : Identify unspent\nfunds
+alt Sufficient funds
+    Client ->> Miner : Send transaction data
+    activate Miner
+    Miner ->> Miner : Add transaction to\nprocessing pool
+    Client <<-- Miner : Get change
+    Miner ->> Miner : Compute next block
+    Miner ->> BlockChain : Add new block\nto block chain
+else Insufficient funds
+    
+end
+deactivate Client
+deactivate BlockChain
+deactivate Miner
+@enduml

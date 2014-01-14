@@ -1,0 +1,34 @@
+' Use Case diagrams
+
+@startuml
+title Cryptcoin Use Cases
+
+actor User
+actor "Transaction Recipient" as Recipient << Address >>
+
+(Activate Competition Mode) as Competition
+(Display user funds) as Funds << Update View >>
+(Start mining) as Miner
+(Create new address) as NewAddress << Generate key pair >>
+(Send funds) as Pay << Controller >>
+(Save/load keys used\nby each wallet) as SaveLoad
+(Hide address) as HideAddress << Delete >>
+(Receive funds) as Receive
+
+(Compute usable funds) as Compute
+(Create new transaction) as Transaction << Update Model >>
+
+User -down-> Funds
+User -down-> Competition
+User -left-> Miner
+User -up-> NewAddress
+User -> SaveLoad
+User -> Pay
+User -up-> HideAddress
+Pay --|> Transaction
+Funds --|> Compute
+Transaction --|> Compute
+Transaction -> Receive
+
+Recipient <- Receive
+@enduml

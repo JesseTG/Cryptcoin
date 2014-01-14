@@ -1,0 +1,42 @@
+' UML sequence diagram for receiving BlockMessages
+
+@startuml
+title Receiving a BlockMessage
+hide footbox
+
+participant "Remote Node" as Remote
+participant "Wallet Node" as Client << Client >>
+participant "Block Chain" as BlockChain << Data Structure >>
+
+activate Client
+activate Remote
+Remote -> Client : Incoming Block
+Remote <-- Client : Acknowled
+deactivate Remote
+
+
+
+Client -> Client : Preliminary block validation
+activate Client
+note left
+    Validate the fields that
+    don't depend on other
+    blocks (leading zeroes,
+    timestamps, etc.)
+end note
+deactivate Client
+alt Preliminary validation passes
+    Client -> BlockChain : Are block references valid?
+    activate BlockChain
+    Client <-- BlockChain : Block reference valdity
+    alt Block references are valid
+        Client -> BlockChain : Add Block to chain
+    else Block references are invalid
+    end
+    deactivate BlockChain
+else Preliminary validation fails
+    Client -> Client : Discard received block
+end
+deactivate Client
+@enduml
+
